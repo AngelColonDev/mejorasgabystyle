@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil | Gaby Style Barber Studio</title>
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/dtw3qx4qq/image/upload/v1783972135/b3a13ac1-cac2-4367-9c0d-5946397d4ff9-removebg-preview_xhkncw.png">
+    <link rel="apple-touch-icon" href="https://res.cloudinary.com/dtw3qx4qq/image/upload/v1783972135/b3a13ac1-cac2-4367-9c0d-5946397d4ff9-removebg-preview_xhkncw.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="shared-theme.css">
+    <style>
+        :root {
+            --gold: var(--theme-gold);
+            --gold-soft: var(--theme-gold-soft);
+            --text: var(--theme-text);
+            --muted: var(--theme-muted);
+            --border: var(--theme-line);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top right, rgba(212,175,55,.16), transparent 20%),
+                linear-gradient(180deg, #0a0a0a 0%, #040404 100%);
+            min-height: 100vh;
+            padding-bottom: 92px;
+        }
+        a { color: inherit; text-decoration: none; }
+        h1, h2, h3, h4 { font-family: 'Cinzel', serif; }
+        body.light-mode .panel-card { background: #fff; box-shadow: 0 24px 60px rgba(16,24,40,.1); }
+        body.light-mode .field input, body.light-mode .field select, body.light-mode .field textarea { background: rgba(0,0,0,.03); }
+        body.light-mode .field select, body.light-mode .field select option { background-color: #fff; }
+        body.light-mode .profile-avatar { background: rgba(0,0,0,.06); }
+        body.light-mode .mini-stat, body.light-mode .history-card, body.light-mode .section-note { background: rgba(0,0,0,.04); border-color: rgba(0,0,0,.06); }
+        body.light-mode .auth-tabs { background: rgba(0,0,0,.05); }
+        body.light-mode .age-alert { background: rgba(220,53,69,.08); color: #a83232; }
+        body.light-mode .footer-pro { background: #fff; border-top-color: rgba(0,0,0,.06); }
+        body.light-mode .footer-col a, body.light-mode .footer-col p { color: #555; }
+        .topbar {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+            padding: 1rem 1.3rem; background: rgba(8,8,8,.86); backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(212,175,55,.12);
+        }
+        .brand { color: var(--gold); font-weight: 800; letter-spacing: .12em; }
+        .wrap { max-width: 1180px; margin: 0 auto; padding: 3rem 1.25rem 4rem; }
+        .portal-grid { display: grid; grid-template-columns: 1fr; max-width: 640px; margin: 0 auto; gap: 1.25rem; align-items: start; }
+        .panel-card {
+            background: linear-gradient(180deg, rgba(18,18,18,.98), rgba(9,9,9,.98));
+            border: 1px solid var(--border);
+            border-radius: 26px;
+            padding: 1.6rem;
+            box-shadow: 0 24px 60px rgba(0,0,0,.35);
+        }
+        .auth-card { position: relative; z-index: 0; max-width: 440px; margin: 0 auto; padding: 2.5rem 2.25rem; }
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            border-radius: inherit;
+            padding: 2px;
+            pointer-events: none;
+            background: linear-gradient(115deg, transparent 15%, rgba(212,175,55,.15) 35%, rgba(246,223,160,.95) 50%, rgba(212,175,55,.15) 65%, transparent 85%);
+            background-size: 260% 260%;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: led-border-move 5s linear infinite;
+        }
+        @keyframes led-border-move {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 260% 260%; }
+        }
+        .auth-card-head { text-align: center; margin-bottom: 1.75rem; }
+        .auth-logo { width: 64px; height: 64px; object-fit: contain; display: block; margin: 0 auto 1.1rem; filter: drop-shadow(0 6px 16px rgba(212,175,55,.35)); }
+        .auth-title { font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.9rem; letter-spacing: -0.02em; margin-bottom: .5rem; }
+        .auth-subtitle { color: var(--muted); font-size: .92rem; line-height: 1.55; max-width: 320px; margin: 0 auto; }
+        .stack { display: grid; gap: 1rem; }
+        .field { display: grid; gap: .5rem; }
+        .field label { color: var(--gold-soft); font-size: .85rem; }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,.03);
+            color: var(--text);
+            padding: .95rem 1rem;
+            font: inherit;
+            transition: border-color .18s ease, box-shadow .18s ease;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            outline: none; border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,175,55,.15);
+        }
+        .field select {
+            appearance: auto;
+            background-color: #141414;
+        }
+        .field select option {
+            background-color: #141414;
+            color: var(--text);
+        }
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: .65rem;
+            border-radius: 999px; padding: .95rem 1.4rem; font-size: .78rem; letter-spacing: .08em;
+            text-transform: uppercase; font-weight: 700; border: none; cursor: pointer;
+            transition: transform .15s ease, opacity .15s ease;
+        }
+        .btn:active { transform: scale(.97); }
+        .btn-primary { background: linear-gradient(135deg, #f6dfa0 0%, #d4af37 62%, #87640f 100%); color: #111; }
+        .btn-ghost { border: 1px solid rgba(212,175,55,.35); background: transparent; color: var(--text); }
+        .editor-actions, .client-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .profile-head { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.5rem; }
+        .profile-avatar { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(212,175,55,.4); background: rgba(255,255,255,.08); }
+        .feed-role { font-size: .72rem; letter-spacing: 1.8px; text-transform: uppercase; color: var(--gold); }
+        .status-chip {
+            display: inline-flex; align-items: center; gap: .4rem; padding: .5rem .9rem; border-radius: 999px;
+            font-size: .75rem; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .status-online { background: rgba(40,167,69,.18); color: #53d67b; }
+        .status-offline { background: rgba(220,53,69,.18); color: #f07171; }
+        .status-pending { background: rgba(241,190,93,.18); color: #f1be5d; }
+        .privacy-panel { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border); display: grid; gap: 1rem; }
+        .privacy-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; font-size: .85rem; }
+        .privacy-links a { color: var(--gold); text-decoration: underline; }
+        .security-box { border: 1px solid var(--border); border-radius: 18px; padding: 1rem 1.1rem; display: grid; gap: .6rem; }
+        .security-box p { color: var(--muted); font-size: .85rem; line-height: 1.6; }
+        .security-box .btn { justify-self: start; }
+        .danger-zone { border: 1px solid rgba(220,53,69,.35); background: rgba(220,53,69,.06); border-radius: 18px; padding: 1rem 1.1rem; display: grid; gap: .6rem; }
+        .danger-zone p { color: var(--muted); font-size: .85rem; line-height: 1.6; }
+        .btn-danger { background: #c93636; color: #fff; justify-self: start; }
+        .btn-danger:hover { background: #b02c2c; }
+        .link-btn { justify-self: start; background: none; border: 0; padding: 0; color: var(--gold); font: inherit; font-size: .85rem; text-decoration: underline; cursor: pointer; }
+        .mini-stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .mini-stat {
+            border-radius: 18px; padding: 1rem; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.05);
+        }
+        .mini-stat strong { display: block; font-size: 1.5rem; color: var(--gold); margin-top: .35rem; }
+        .profile-meta { display: grid; gap: .8rem; margin-bottom: 0; color: var(--muted); }
+        .profile-section { margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+        .profile-section:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+        .profile-section-title { font-size: .72rem; letter-spacing: 1.8px; text-transform: uppercase; color: var(--gold); margin-bottom: .8rem; }
+        .age-alert { display: flex; align-items: flex-start; gap: .7rem; border-radius: 14px; border: 1px solid rgba(220,53,69,.4); background: rgba(220,53,69,.1); color: #f4a3a3; padding: 1rem 1.25rem; font-size: .85rem; line-height: 1.6; margin-bottom: 1.5rem; }
+        .auth-tabs { display: flex; gap: 4px; margin-bottom: 1.5rem; background: rgba(255,255,255,.05); border-radius: 14px; padding: 4px; }
+        .auth-tab { flex: 1; padding: .65rem 1rem; border-radius: 10px; border: none; background: transparent; color: var(--muted); font-size: .74rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; cursor: pointer; transition: all .2s ease; }
+        .auth-tab.active { background: var(--gold); color: #0a0a0a; box-shadow: 0 4px 14px rgba(0,0,0,.3); }
+        .history-list { display: grid; gap: 1rem; margin-top: 1rem; }
+        .history-card {
+            display: flex; justify-content: space-between; gap: 1rem; padding: 1rem 1.2rem; border-radius: 18px;
+            background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.05);
+        }
+        .feed-meta, .review-form-note, .empty-state { color: var(--muted); }
+        .empty-state { padding: 1rem 0; }
+        .section-note {
+            border-radius: 18px; padding: 1rem 1.1rem; margin-top: 1rem;
+            background: rgba(255,255,255,.03); border: 1px solid var(--border); color: var(--muted);
+        }
+        .footer-pro {
+            background: linear-gradient(180deg, #0a0a0a 0%, #050505 100%);
+            padding: 4rem 2rem; border-top: 1px solid rgba(212,175,55,0.12);
+        }
+        .footer-pro-inner {
+            max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 2rem;
+        }
+        .footer-brand img { width: 88px; margin-bottom: 1rem; filter: drop-shadow(0 0 18px rgba(212,175,55,0.28)); }
+        .footer-col h4, .footer-brand h3 { font-family: 'Cinzel', serif; }
+        .footer-col h4 { color: var(--gold); margin-bottom: 1rem; }
+        .footer-col a, .footer-col p { color: #b6b6b6; line-height: 1.8; }
+        .footer-payments { max-width: 1180px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px solid rgba(212,175,55,0.12); display: flex; align-items: center; justify-content: center; gap: 1.3rem; flex-wrap: wrap; color: #999; font-size: 0.85rem; }
+        .footer-payments i { font-size: 1.8rem; }
+        .footer-payments .fa-cc-visa { color: #2566AF; }
+        .footer-payments .fa-cc-mastercard { color: #EB5424; }
+        .footer-payments .fa-apple-pay { color: #e8e8e8; }
+        .footer-payments .fa-paypal { color: #3B8FE0; }
+        .footer-payments .ath-badge { font-weight: 700; letter-spacing: 0.03em; padding: 0.3rem 0.7rem; border: 1px solid rgba(76,196,99,0.4); border-radius: 8px; color: #4CC463; font-size: 0.78rem; }
+        body.light-mode .footer-payments { color: #666; border-top-color: rgba(0,0,0,0.06); }
+        body.light-mode .footer-payments .fa-apple-pay { color: #1d1d1f; }
+        .footer-credit { display: inline-flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; color: var(--gold-soft); font-weight: 600; }
+        .footer-credit-logo { width: 30px; height: 30px; border-radius: 8px; display: block; box-shadow: 0 8px 18px rgba(0,0,0,0.22); }
+        .mobile-bottom-nav {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+            display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .25rem;
+            padding: .8rem .7rem calc(.8rem + env(safe-area-inset-bottom));
+            background: rgba(8,8,8,.96); backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(212,175,55,.15);
+        }
+        .mobile-bottom-nav a {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .3rem;
+            color: #d8d2c3; font-size: .68rem; font-weight: 600;
+        }
+        .mobile-bottom-nav i { color: var(--gold); font-size: 1.05rem; }
+        .mobile-bottom-nav .active { color: var(--gold-soft); }
+        @media (max-width: 900px) {
+            .portal-grid, .footer-pro-inner, .mini-stat-grid { grid-template-columns: 1fr; }
+            .history-card { flex-direction: column; }
+        }
+        @media (min-width: 969px) {
+            body { padding-bottom: 0; }
+            .mobile-bottom-nav { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar" data-mobile-topbar>
+        <a class="brand" href="index.html">GABY STYLE</a>
+        <a class="btn btn-ghost" href="settings.html">Configuración</a>
+    </div>
+
+    <main class="wrap">
+        <div class="portal-grid" data-maintenance-section="cuentas">
+            <section class="panel-card auth-card" id="client-auth-panel">
+                <div class="auth-card-head">
+                    <img class="auth-logo" src="https://res.cloudinary.com/dtw3qx4qq/image/upload/v1783972135/b3a13ac1-cac2-4367-9c0d-5946397d4ff9-removebg-preview_xhkncw.png" alt="Logo GOAT Style Salón">
+                    <h1 class="auth-title" id="auth-title">Registrarme</h1>
+                    <p class="auth-subtitle" id="auth-subtitle">Crea tu cuenta para reservar citas, ver tu historial y recibir sorpresas en tu cumpleaños.</p>
+                </div>
+                <div class="auth-tabs" role="tablist">
+                    <button type="button" class="auth-tab active" id="auth-tab-register" onclick="switchAuthTab('register')">Registrarme</button>
+                    <button type="button" class="auth-tab" id="auth-tab-login" onclick="switchAuthTab('login')">Iniciar sesión</button>
+                </div>
+
+                <form id="client-register-form" class="stack" onsubmit="handleClientRegister(event)">
+                    <div class="section-note" style="margin: 0;">
+                        <strong>¿Por qué pedimos estos datos?</strong> Así tu barbero sabe cómo atenderte mejor y te podemos sorprender con descuentos en tu cumpleaños.
+                    </div>
+                    <div class="field"><label for="client-full-name">Nombre completo</label><input id="client-full-name" type="text" placeholder="Tu nombre completo" required></div>
+                    <div class="field"><label for="client-email">Correo (Gmail)</label><input id="client-email" type="email" placeholder="tunombre@gmail.com" required></div>
+                    <div class="field"><label for="client-phone">¿Tu teléfono?</label><input id="client-phone" type="tel" placeholder="787-000-0000" required></div>
+                    <div class="field"><label for="client-birthdate">¿Cuándo es tu cumpleaños?</label><input id="client-birthdate" type="date" required></div>
+                    <div class="field"><label for="client-password">Crea una contraseña</label><input id="client-password" type="password" placeholder="Crea una contraseña" required></div>
+                    <div class="field"><label for="client-password-confirm">Confirma tu contraseña</label><input id="client-password-confirm" type="password" placeholder="Repite tu contraseña" required></div>
+                    <div class="field"><label for="client-haircut">¿Qué recorte prefieres?</label><select id="client-haircut" required></select></div>
+                    <div class="field" id="client-haircut-other-wrap" hidden><label for="client-haircut-other">¿Cuál es tu recorte?</label><input id="client-haircut-other" type="text" placeholder="Escribe el nombre de tu recorte"></div>
+                    <div class="field">
+                        <label for="client-beard">¿Te arreglas la barba?</label>
+                        <select id="client-beard">
+                            <option value="No aplica">No aplica</option>
+                            <option value="Sí, mantenimiento">Sí, mantenimiento</option>
+                            <option value="Sí, detallada">Sí, detallada</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="client-preferred-barber">¿Con cual barbero prefieres?</label>
+                        <select id="client-preferred-barber">
+                            <option value="gabriel">Gabriel Andres Ortiz (Gaby)</option>
+                            <option value="darialex">Darialex Rivera (Tazmania)</option>
+                            <option value="wilo">Wilo</option>
+                        </select>
+                    </div>
+                    <div class="field"><label for="client-photo">Foto de perfil (opcional)</label><input id="client-photo" type="file" accept="image/*"></div>
+                    <div class="consent-box">
+                        <p>Usaremos tu nombre, correo, teléfono, fecha de nacimiento y preferencias para crear tu cuenta, gestionar tus citas y comunicarnos contigo sobre ellas. Las cuentas son para personas de 18 años o más; si la cita es para un menor, el padre, madre o tutor reserva desde su propia cuenta. Detalles en la <a href="privacidad.html" target="_blank">Política de Privacidad</a>.</p>
+                        <label class="consent-check"><input type="checkbox" id="client-accept-terms" required><span>He leido y acepto los <a href="terminos.html" target="_blank">Terminos y Condiciones</a> y reconozco la <a href="privacidad.html" target="_blank">Política de Privacidad</a>.</span></label>
+                        <label class="consent-check"><input type="checkbox" id="client-marketing"><span>Deseo recibir promociones y ofertas de Gaby Style Barber Studio. (Opcional)</span></label>
+                    </div>
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" type="submit">Registrarme</button>
+                    </div>
+                </form>
+
+                <form id="client-login-form" class="stack" onsubmit="handleClientLogin(event)" style="display: none;">
+                    <div class="field"><label for="login-email">Correo</label><input id="login-email" type="email" placeholder="cliente@email.com" autocomplete="username" required></div>
+                    <div class="field"><label for="login-password">Contraseña</label><input id="login-password" type="password" placeholder="Tu contraseña" autocomplete="current-password" required></div>
+                    <button type="button" class="link-btn" onclick="handleForgotPassword()">¿Olvidaste tu contraseña?</button>
+                    <div class="editor-actions">
+                        <button class="btn btn-primary" type="submit">Iniciar sesión</button>
+                    </div>
+                </form>
+                <div id="client-auth-status" class="review-form-note"></div>
+            </section>
+
+            <section class="panel-card" id="client-profile-panel">
+                <div class="profile-head">
+                    <img id="client-profile-avatar" class="profile-avatar" src="https://i.pravatar.cc/200?img=24" alt="Foto del cliente" onerror="this.onerror=null;this.src='review-avatar.svg'">
+                    <div>
+                        <h3 id="client-profile-name" style="font-size: 1.9rem;">Invitado</h3>
+                        <div id="client-profile-role" class="feed-role">Sin sesión activa</div>
+                        <div id="shop-mode-chip" class="status-chip status-online" style="margin-top: .7rem;"></div>
+                    </div>
+                </div>
+
+                <div id="client-age-alert" class="age-alert" style="display: none;"></div>
+
+                <div class="mini-stat-grid">
+                    <div class="mini-stat">Tiempo con la barbería<strong id="client-member-since">-</strong></div>
+                    <div class="mini-stat">Citas en historial<strong id="client-booking-count">0</strong></div>
+                </div>
+
+                <div class="profile-section">
+                    <h4 class="profile-section-title">Contacto</h4>
+                    <div class="profile-meta">
+                        <span id="client-profile-email">Correo: -</span>
+                        <span id="client-profile-phone">Teléfono: -</span>
+                    </div>
+                    <div class="client-actions" id="client-contact-actions" style="margin-top: .8rem;"></div>
+                </div>
+
+                <div class="profile-section">
+                    <h4 class="profile-section-title">Edad y cumpleaños</h4>
+                    <div class="profile-meta">
+                        <span id="client-profile-age">Edad: -</span>
+                        <span id="client-profile-birthday">Cumpleaños: -</span>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <h4 class="profile-section-title">Preferencias</h4>
+                    <div class="profile-meta">
+                        <span id="client-profile-haircut">Recorte favorito: -</span>
+                        <span id="client-profile-beard">Barba: -</span>
+                        <span id="client-profile-barber">Barbero asignado: -</span>
+                    </div>
+                </div>
+
+                <div class="client-actions">
+                    <a class="btn btn-primary" href="booking.html">Reservar nueva cita</a>
+                    <button class="btn btn-ghost" type="button" onclick="toggleClientEditMode()">Configuración del perfil</button>
+                    <button class="btn btn-ghost" type="button" onclick="logoutClient()">Cerrar sesión</button>
+                </div>
+
+                <div id="client-edit-box" style="display: none; margin-top: 1.5rem;">
+                    <form id="client-edit-form" class="stack" onsubmit="handleClientProfileUpdate(event)">
+                        <div class="field"><label for="edit-client-name">Nombre completo</label><input id="edit-client-name" type="text"></div>
+                        <div class="field"><label for="edit-client-email">Correo</label><input id="edit-client-email" type="email"></div>
+                        <div class="field"><label for="edit-client-phone">Teléfono</label><input id="edit-client-phone" type="tel"></div>
+                        <div class="field"><label for="edit-client-birthdate">Fecha de nacimiento</label><input id="edit-client-birthdate" type="date"></div>
+                        <div class="field"><label for="edit-client-haircut">Recorte</label><select id="edit-client-haircut"></select></div>
+                        <div class="field" id="edit-client-haircut-other-wrap" hidden><label for="edit-client-haircut-other">¿Cuál es tu recorte?</label><input id="edit-client-haircut-other" type="text" placeholder="Escribe el nombre de tu recorte"></div>
+                        <div class="field"><label for="edit-client-beard">Barba</label><input id="edit-client-beard" type="text"></div>
+                        <div class="field">
+                            <label for="edit-client-barber">Barbero</label>
+                            <select id="edit-client-barber">
+                                <option value="gabriel">Gabriel Andres Ortiz (Gaby)</option>
+                                <option value="darialex">Darialex Rivera (Tazmania)</option>
+                                <option value="wilo">Wilo</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" type="submit">Guardar cambios</button>
+                    </form>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <h4 id="citas" style="font-size: 1.3rem; margin-bottom: 1rem; scroll-margin-top: 90px;">Mis citas</h4>
+                    <div id="client-history" class="history-list"></div>
+                </div>
+
+                <div class="privacy-panel" id="privacidad">
+                    <h4 class="profile-section-title">Privacidad</h4>
+                    <label class="consent-check">
+                        <input type="checkbox" id="client-marketing-toggle" onchange="updateMarketingConsent(this.checked)">
+                        <span>Recibir promociones y ofertas de Gaby Style Barber Studio. Puedes desactivarlo cuando quieras; los avisos sobre tus citas y tu cuenta se siguen enviando.</span>
+                    </label>
+                    <div class="privacy-links">
+                        <a href="privacidad.html">Política de Privacidad</a>
+                        <a href="avisos.html#eliminacion">Cómo funciona la eliminación de cuenta</a>
+                    </div>
+                    <div class="security-box" id="seguridad">
+                        <strong>Contraseña</strong>
+                        <p>Cámbiala cuando quieras. Te pediremos tu contraseña actual y la nueva debe cumplir todos los requisitos de seguridad.</p>
+                        <button class="btn btn-ghost" type="button" onclick="openChangePassword()"><i class="fas fa-key"></i> Cambiar contraseña</button>
+                    </div>
+                    <div class="danger-zone">
+                        <strong>Eliminar mi cuenta</strong>
+                        <p>Se borran tu perfil, foto y preferencias. Tus citas pendientes o aprobadas se cancelan, y el historial de citas se conserva sin tu nombre ni tus datos de contacto. Esta acción no se puede deshacer.</p>
+                        <button class="btn btn-danger" type="button" onclick="deleteClientAccount()"><i class="fas fa-trash"></i> Eliminar mi cuenta</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer data-site-footer></footer>
+
+    <div class="mobile-bottom-nav">
+        <a href="index.html"><i class="fas fa-house"></i><span>Home</span></a>
+        <a href="services.html"><i class="fas fa-scissors"></i><span>Servicios</span></a>
+        <a href="booking.html"><i class="fas fa-calendar-check"></i><span>Cita</span></a>
+        <a href="news.html"><i class="fas fa-newspaper"></i><span>Noticias</span></a>
+        <a href="settings.html" class="active"><i class="fas fa-gear"></i><span>Config</span></a>
+    </div>
+
+    <script src="supabase-config.js"></script>
+    <script src="shared-data.js"></script>
+    <script src="supabase-sync.js"></script>
+    <script src="site-guard.js"></script>
+    <script src="password-policy.js"></script>
+    <script src="security.js"></script>
+    <script src="shared-preferences.js"></script>
+    <script src="shared-forms.js"></script>
+    <script src="booking-engine.js"></script>
+    <script src="booking-widget.js"></script>
+    <script src="client-account.js"></script>
+    <script src="legal.js"></script>
+    <script src="site-chrome.js"></script>
+    <script>
+        function getDb() { return window.GabyData.getState(); }
+        function updateDb(mutator) { return window.GabyData.updateState(mutator); }
+        function getBarberName(barberId) {
+            const barber = getDb().barbers.find(item => item.id === barberId);
+            if (!barber) return barberId;
+            return barber.alias && barber.alias !== barber.name ? `${barber.name} (${barber.alias})` : barber.name;
+        }
+        function getCurrentClient() {
+            const db = getDb();
+            return db.clients.find(client => client.id === db.session.currentClientId) || null;
+        }
+        function parseLocalDate(dateStr) {
+            if (!dateStr) return null;
+            const [year, month, day] = String(dateStr).split('-').map(Number);
+            if (!year || !month || !day) return null;
+            const date = new Date(year, month - 1, day);
+            return Number.isNaN(date.getTime()) ? null : date;
+        }
+        function calculateAge(birthDate) {
+            const birth = parseLocalDate(birthDate);
+            if (!birth) return null;
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) age -= 1;
+            return age;
+        }
+        function daysUntilBirthday(birthDate) {
+            const birth = parseLocalDate(birthDate);
+            if (!birth) return null;
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            let next = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+            if (next < today) next = new Date(today.getFullYear() + 1, birth.getMonth(), birth.getDate());
+            return Math.round((next - today) / 86400000);
+        }
+        function formatBirthdayCountdown(birthDate) {
+            const days = daysUntilBirthday(birthDate);
+            if (days === null) return '';
+            if (days === 0) return '¡Es hoy! 🎉';
+            if (days === 1) return 'Es mañana';
+            return `Faltan ${days} días`;
+        }
+        function formatBirthDate(birthDate) {
+            const birth = parseLocalDate(birthDate);
+            if (!birth) return '-';
+            return birth.toLocaleDateString('es-PR', { year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        function formatMembershipDuration(days) {
+            if (!days || days < 1) return 'Nuevo cliente';
+            if (days < 30) return `${days} día${days === 1 ? '' : 's'}`;
+            const years = Math.floor(days / 365);
+            const months = Math.floor((days % 365) / 30);
+            const remDays = Math.floor((days % 365) % 30);
+            if (years > 0) {
+                return months > 0 ? `${years} año${years === 1 ? '' : 's'}, ${months} mes${months === 1 ? '' : 'es'}` : `${years} año${years === 1 ? '' : 's'}`;
+            }
+            return remDays > 0 ? `${months} mes${months === 1 ? '' : 'es'}, ${remDays} día${remDays === 1 ? '' : 's'}` : `${months} mes${months === 1 ? '' : 'es'}`;
+        }
+        function normalizePhoneNumber(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            if (!digits) return '';
+            if (digits.length === 10) return `1${digits}`;
+            if (digits.length === 11 && digits.startsWith('1')) return digits;
+            return digits;
+        }
+        function formatDateTime(value) {
+            if (!value) return '-';
+            return new Date(value).toLocaleString('es-PR', { year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+        }
+
+        function toggleClientEditMode() {
+            const editBox = document.getElementById('client-edit-box');
+            editBox.style.display = editBox.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function switchAuthTab(tab) {
+            const isLogin = tab === 'login';
+            document.getElementById('auth-tab-login').classList.toggle('active', isLogin);
+            document.getElementById('auth-tab-register').classList.toggle('active', !isLogin);
+            document.getElementById('client-login-form').style.display = isLogin ? 'grid' : 'none';
+            document.getElementById('client-register-form').style.display = isLogin ? 'none' : 'grid';
+            document.getElementById('client-auth-status').innerText = '';
+            document.getElementById('auth-title').innerText = isLogin ? 'Iniciar sesión' : 'Registrarme';
+            document.getElementById('auth-subtitle').innerText = isLogin
+                ? 'Ingresa tu correo y contraseña para acceder a tu cuenta.'
+                : 'Crea tu cuenta para reservar citas, ver tu historial y recibir sorpresas en tu cumpleaños.';
+        }
+
+        const cloudEnabled = () => Boolean(window.GabyCloud && window.GabyCloud.enabled);
+        const toast = (message, type, options) => window.GabyData.toast(message, type, options);
+        function setStatus(message, type) {
+            document.getElementById('client-auth-status').innerText = message;
+            if (type) toast(message, type);
+        }
+        async function logoutClient() {
+            try {
+                if (cloudEnabled()) await window.GabyCloud.signOut();
+                updateDb(db => { db.session.currentClientId = null; });
+                setStatus('Sesión cerrada.', 'success');
+            } catch (error) {
+                setStatus(error.userMessage || 'No se pudo cerrar la sesión.', 'error');
+            }
+            switchAuthTab('login');
+            renderClientPortal();
+        }
+        async function handleClientLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+            // Verifica la contrasena (hash), cuenta los intentos y bloquea al tercer error.
+            const result = await window.GabySecurity.login({ email, password, type: 'client' });
+            if (!result.ok) {
+                setStatus(result.message, result.reason === 'locked' ? 'error' : 'warning');
+                return;
+            }
+            if (!cloudEnabled()) updateDb(db => { db.session.currentClientId = result.account.id; });
+            document.getElementById('client-login-form').reset();
+            if (result.mustChangePassword) {
+                await window.GabySecurity.promptPasswordChange({
+                    type: 'client',
+                    email,
+                    name: result.account?.name,
+                    title: 'Crea una contraseña nueva',
+                    message: 'Tu cuenta fue desbloqueada. Por seguridad, crea una contraseña nueva para continuar.'
+                });
+            }
+            setStatus('Sesión iniciada correctamente.', 'success');
+            renderClientPortal();
+            goNextIfAny();
+        }
+        async function handleForgotPassword() {
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            if (!cloudEnabled()) {
+                toast('La recuperación de contraseña se activara al conectar el servidor. Mientras tanto, comunícate con la barbería al 787-218-1068.', 'warning', { duration: 9000 });
+                return;
+            }
+            if (!email) {
+                toast('Escribe tu correo en el campo "Correo" y vuelve a pulsar el enlace.', 'warning');
+                document.getElementById('login-email').focus();
+                return;
+            }
+            try {
+                await window.GabyCloud.resetPassword(email);
+                toast('Si existe una cuenta con ese correo, te enviamos un enlace para crear una contraseña nueva.', 'success', { duration: 9000 });
+            } catch (error) {
+                toast(error.userMessage || 'No se pudo enviar el correo de recuperación.', 'error');
+            }
+        }
+        // Al abrir el enlace de recuperación que llega por correo, Supabase avisa con este evento.
+        window.addEventListener('gabypasswordrecovery', async () => {
+            const password = window.prompt('Escribe tu nueva contraseña (mínimo 6 caracteres):');
+            if (!password) return;
+            try {
+                await window.GabyCloud.updatePassword(password);
+                toast('Tu contraseña se actualizo correctamente.', 'success');
+            } catch (error) {
+                toast(error.userMessage || 'No se pudo actualizar la contraseña.', 'error');
+            }
+        });
+        function readFileAsDataUrl(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = () => reject(reader.error);
+                reader.readAsDataURL(file);
+            });
+        }
+        async function handleClientRegister(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('client-full-name').value.trim();
+            const email = document.getElementById('client-email').value.trim().toLowerCase();
+            const phone = document.getElementById('client-phone').value.trim();
+            const birthDate = document.getElementById('client-birthdate').value;
+            const password = document.getElementById('client-password').value;
+            const passwordConfirm = document.getElementById('client-password-confirm').value;
+            const haircut = window.GabyForms.getHaircut('client-haircut', 'client-haircut-other');
+            const beard = document.getElementById('client-beard').value;
+            const preferredBarber = document.getElementById('client-preferred-barber').value;
+            const fileInput = document.getElementById('client-photo');
+            const passwordErrors = registerPasswordPolicy.errors();
+            if (passwordErrors.length) {
+                setStatus(passwordErrors[0], 'error');
+                return;
+            }
+            if (password !== passwordConfirm) {
+                setStatus('Las contraseñas no coinciden.', 'error');
+                return;
+            }
+            if (!cloudEnabled() && getDb().clients.some(item => item.email.toLowerCase() === email)) {
+                setStatus('Ya existe un perfil con ese correo. Inicia sesión en su lugar.', 'error');
+                return;
+            }
+            if (new Date(birthDate) > new Date()) {
+                setStatus('La fecha de nacimiento no puede ser en el futuro.', 'error');
+                return;
+            }
+            const minAge = Number(window.GabyLegal?.value('minAge') || 18);
+            if (calculateAge(birthDate) < minAge) {
+                setStatus(`Las cuentas son para personas de ${minAge} años o más. Si la cita es para un menor, el padre, madre o tutor debe crear la cuenta y reservar.`, 'error');
+                return;
+            }
+            const marketingOptIn = document.getElementById('client-marketing').checked;
+            let photo = '';
+            try {
+                if (fileInput.files && fileInput.files[0]) photo = await readFileAsDataUrl(fileInput.files[0]);
+            } catch (error) {
+                toast('No se pudo leer la foto. Puedes crear la cuenta sin ella.', 'warning');
+            }
+            const profile = {
+                name: fullName,
+                email,
+                phone,
+                birthDate,
+                haircut,
+                beard,
+                preferredBarber,
+                photo: photo || 'https://i.pravatar.cc/200?img=24',
+                registeredAt: new Date().toISOString(),
+                // Evidencia del consentimiento: fecha, hora y versión aceptada.
+                consent: window.GabyLegal ? window.GabyLegal.buildConsentRecord({ source: 'profile-register' }) : null,
+                marketingConsent: { optIn: marketingOptIn, updatedAt: new Date().toISOString() }
+            };
+            if (cloudEnabled()) {
+                try {
+                    const { needsConfirmation } = await window.GabyCloud.signUp({ email, password, profile });
+                    document.getElementById('client-register-form').reset();
+                    if (needsConfirmation) {
+                        switchAuthTab('login');
+                        setStatus('Te enviamos un correo para confirmar tu cuenta. Abre el enlace y luego inicia sesión.');
+                        toast('Te enviamos un correo para confirmar tu cuenta. Abre el enlace y luego inicia sesión.', 'success', { duration: 9000 });
+                        return;
+                    }
+                    setStatus('Cuenta creada y sesión iniciada.', 'success');
+                    renderClientPortal();
+                    goNextIfAny();
+                } catch (error) {
+                    setStatus(error.userMessage || 'No se pudo crear la cuenta.', 'error');
+                }
+                return;
+            }
+            let passwordHash;
+            try {
+                passwordHash = await window.GabySecurity.createClientPasswordHash(password, { name: fullName, email });
+            } catch (error) {
+                setStatus(error.userMessage || 'La contraseña no cumple los requisitos.', 'error');
+                return;
+            }
+            const saved = await window.GabyData.commit(db => {
+                // Solo se guarda el hash de la contrasena, nunca la contrasena.
+                const client = { id: window.GabyData.makeId('client'), passwordHash, ...profile };
+                db.clients.push(client);
+                db.session.currentClientId = client.id;
+            }, { success: 'Perfil creado y sesión iniciada.', error: 'No se pudo crear la cuenta.' });
+            if (!saved) return;
+            document.getElementById('client-register-form').reset();
+            setStatus('Perfil creado y sesión iniciada.');
+            renderClientPortal();
+            goNextIfAny();
+        }
+        async function handleClientProfileUpdate(event) {
+            event.preventDefault();
+            const client = getCurrentClient();
+            if (!client) return;
+            const ok = await window.GabyData.commit(db => {
+                const target = db.clients.find(item => item.id === client.id);
+                if (!target) throw Object.assign(new Error('client'), { userMessage: 'Tu sesión expiro. Inicia sesión de nuevo.' });
+                target.name = document.getElementById('edit-client-name').value.trim() || target.name;
+                // Con Supabase el correo de acceso se cambia desde Auth, no desde el perfil.
+                if (!cloudEnabled()) target.email = document.getElementById('edit-client-email').value.trim().toLowerCase() || target.email;
+                target.phone = document.getElementById('edit-client-phone').value.trim() || target.phone;
+                target.birthDate = document.getElementById('edit-client-birthdate').value || target.birthDate;
+                target.haircut = window.GabyForms.getHaircut('edit-client-haircut', 'edit-client-haircut-other') || target.haircut;
+                target.beard = document.getElementById('edit-client-beard').value.trim() || target.beard;
+                target.preferredBarber = document.getElementById('edit-client-barber').value || target.preferredBarber;
+            }, { success: 'Perfil actualizado correctamente.', error: 'No se pudo actualizar tu perfil.' });
+            setStatus(ok ? 'Perfil actualizado.' : '');
+            renderClientPortal();
+        }
+        async function cancelAppointment(code) {
+            const appointment = getDb().appointments.find(item => item.code === code);
+            if (!appointment) return;
+            if (!window.confirm(`Deseas cancelar la cita ${appointment.code} para ${appointment.service}? Revisa la Política de Reservaciones por posibles cargos de cancelación tardía.`)) return;
+            await window.GabyData.commit(db => {
+                const target = db.appointments.find(item => item.code === code);
+                if (!target) throw Object.assign(new Error('appt'), { userMessage: 'No encontramos esa cita.' });
+                target.status = 'CANCELADA';
+                // Igual que en la página principal: así el barbero recibe la alerta de cancelación.
+                target.canceledByClient = true;
+                target.canceledAt = new Date().toISOString();
+                target.cancellationAlertSeenBy = [];
+            }, { success: `Cita ${code} cancelada. Tu barbero recibio el aviso.`, error: 'No se pudo cancelar la cita.' });
+            renderClientPortal();
+        }
+        function appointmentStatusNote(item) {
+            if (item.canceledByClient) return 'Cancelada por el cliente';
+            const notes = {
+                APROBADA: 'Cita confirmada por tu barbero. ¡Te esperamos!',
+                PENDIENTE: 'Pendiente de aprobación del barbero',
+                RECHAZADA: 'El barbero no pudo aceptar esta solicitud',
+                CANCELADA: 'Cita cancelada'
+            };
+            return notes[item.status] || 'Solicitud registrada';
+        }
+        async function updateMarketingConsent(optIn) {
+            const client = getCurrentClient();
+            if (!client) return;
+            const ok = await window.GabyData.commit(db => {
+                const target = db.clients.find(item => item.id === client.id);
+                if (target) target.marketingConsent = { optIn, updatedAt: new Date().toISOString() };
+            }, { success: optIn ? 'Listo, recibirás promociones.' : 'Listo, ya no recibirás promociones.', error: 'No se pudo guardar tu preferencia.' });
+            if (!ok) document.getElementById('client-marketing-toggle').checked = !optIn;
+        }
+        // Elimina la cuenta: borra el perfil, cancela citas activas y deja el historial sin datos personales.
+        async function deleteClientAccount() {
+            const client = getCurrentClient();
+            if (!client) return;
+            const typed = window.prompt('Para confirmar que eres el titular, escribe el correo de tu cuenta. Esta acción no se puede deshacer.');
+            if (typed === null) return;
+            if (typed.trim().toLowerCase() !== String(client.email).toLowerCase()) {
+                toast('El correo no coincide con el de esta cuenta. No se elimino nada.', 'error');
+                return;
+            }
+            if (cloudEnabled()) {
+                try {
+                    await window.GabyCloud.deleteAccount();
+                    switchAuthTab('register');
+                    setStatus('Tu cuenta fue eliminada.', 'success');
+                    renderClientPortal();
+                } catch (error) {
+                    toast(error.userMessage || 'No se pudo eliminar la cuenta. Intenta de nuevo o escríbenos.', 'error');
+                }
+                return;
+            }
+            const isOwn = item => item.clientId === client.id || (item.clientEmail && item.clientEmail === client.email) || item.client === client.name;
+            const ok = await window.GabyData.commit(db => {
+                const now = new Date().toISOString();
+                db.appointments.forEach(item => {
+                    if (!isOwn(item)) return;
+                    if (item.status === 'PENDIENTE' || item.status === 'APROBADA') {
+                        item.status = 'CANCELADA';
+                        item.canceledByClient = true;
+                        item.canceledAt = now;
+                        item.cancellationAlertSeenBy = [];
+                    }
+                    item.client = 'Cuenta eliminada';
+                    item.clientId = null;
+                    item.clientEmail = '';
+                    item.vipDetails = null;
+                });
+                db.reviews.forEach(review => {
+                    if (review.clientName === client.name) review.clientName = 'Cliente';
+                });
+                db.memos = (db.memos || []).filter(memo => memo.clientId !== client.id);
+                db.clients = db.clients.filter(item => item.id !== client.id);
+                db.session.currentClientId = null;
+            }, { success: 'Tu cuenta fue eliminada.', error: 'No se pudo eliminar la cuenta.' });
+            if (!ok) return;
+            switchAuthTab('register');
+            setStatus('Tu cuenta fue eliminada.');
+            renderClientPortal();
+        }
+        // Si llego desde una reserva (?next=booking.html...), vuelve alli despues de iniciar sesion.
+        function goNextIfAny() {
+            const next = new URLSearchParams(window.location.search).get('next');
+            if (next && /^(booking|index)\.html/.test(next)) window.setTimeout(() => { window.location.href = next; }, 600);
+        }
+        function renderClientPortal() {
+            const db = getDb();
+            const client = getCurrentClient();
+            const modeChip = document.getElementById('shop-mode-chip');
+            const mode = db.settings.shopMode === 'offline' ? 'Fuera de línea' : 'Abiertos en línea';
+
+            modeChip.className = `status-chip ${db.settings.shopMode === 'offline' ? 'status-offline' : 'status-online'}`;
+            modeChip.innerText = mode;
+
+            const alertBox = document.getElementById('client-age-alert');
+            const authPanel = document.getElementById('client-auth-panel');
+            const profilePanel = document.getElementById('client-profile-panel');
+            if (authPanel) authPanel.style.display = client ? 'none' : 'block';
+            if (profilePanel) profilePanel.style.display = client ? 'block' : 'none';
+
+            if (!client) {
+                document.getElementById('client-profile-name').innerText = 'Invitado';
+                document.getElementById('client-profile-role').innerText = 'Sin sesión activa';
+                document.getElementById('client-profile-avatar').src = 'https://i.pravatar.cc/200?img=24';
+                document.getElementById('client-profile-email').innerText = 'Correo: -';
+                document.getElementById('client-profile-phone').innerText = 'Teléfono: -';
+                document.getElementById('client-profile-age').innerText = 'Edad: -';
+                document.getElementById('client-profile-birthday').innerText = 'Cumpleaños: -';
+                document.getElementById('client-profile-haircut').innerText = 'Recorte favorito: -';
+                document.getElementById('client-profile-beard').innerText = 'Barba: -';
+                document.getElementById('client-profile-barber').innerText = 'Barbero asignado: -';
+                document.getElementById('client-member-since').innerText = '-';
+                document.getElementById('client-booking-count').innerText = '0';
+                document.getElementById('client-contact-actions').innerHTML = '';
+                alertBox.style.display = 'none';
+                document.getElementById('client-history').innerHTML = `<div class="empty-state">Inicia sesión para ver tu historial y administrar tu perfil.</div>`;
+                return;
+            }
+
+            const history = db.appointments
+                .filter(item => item.clientId === client.id || (item.clientEmail && item.clientEmail === client.email) || item.client === client.name)
+                .slice()
+                .sort((a, b) => new Date(b.dateTime || b.createdAt || 0) - new Date(a.dateTime || a.createdAt || 0));
+            const days = Math.max(1, Math.floor((Date.now() - new Date(client.registeredAt || Date.now()).getTime()) / 86400000));
+            const age = calculateAge(client.birthDate);
+
+            document.getElementById('client-profile-name').innerText = client.name;
+            document.getElementById('client-profile-role').innerText = 'Cliente registrado';
+            document.getElementById('client-profile-avatar').src = client.photo || 'https://i.pravatar.cc/200?img=24';
+            document.getElementById('client-profile-email').innerText = `Correo: ${client.email}`;
+            document.getElementById('client-profile-phone').innerText = `Teléfono: ${client.phone || '-'}`;
+            document.getElementById('client-profile-age').innerText = age !== null
+                ? `Edad: ${age} años (${age >= 18 ? 'Mayor de edad' : 'Menor de edad'})`
+                : 'Edad: No disponible';
+            document.getElementById('client-profile-birthday').innerText = client.birthDate
+                ? `Cumpleaños: ${formatBirthDate(client.birthDate)} · ${formatBirthdayCountdown(client.birthDate)}`
+                : 'Cumpleaños: No disponible';
+            document.getElementById('client-profile-haircut').innerText = `Recorte favorito: ${client.haircut || '-'}`;
+            document.getElementById('client-profile-beard').innerText = `Barba: ${client.beard || '-'}`;
+            document.getElementById('client-profile-barber').innerText = `Barbero asignado: ${getBarberName(client.preferredBarber || 'gabriel')}`;
+            document.getElementById('client-member-since').innerText = `${formatMembershipDuration(days)} (${days} días)`;
+            document.getElementById('client-booking-count').innerText = String(history.length);
+
+            if (age !== null && age < 18) {
+                alertBox.style.display = 'flex';
+                alertBox.innerHTML = '<span>⚠️</span><span>Cliente menor de edad. Evita lenguaje fuerte y temas delicados frente a esta persona.</span>';
+            } else {
+                alertBox.style.display = 'none';
+            }
+
+            const phoneDigits = normalizePhoneNumber(client.phone);
+            const contactActions = document.getElementById('client-contact-actions');
+            contactActions.innerHTML = phoneDigits ? `
+                <a class="btn btn-ghost" href="tel:+${phoneDigits}"><i class="fas fa-phone"></i> Llamar</a>
+                <a class="btn btn-ghost" href="https://wa.me/${phoneDigits}" target="_blank" rel="noopener noreferrer"><i class="fab fa-whatsapp"></i> Escribir</a>
+            ` : '';
+
+            document.getElementById('edit-client-name').value = client.name || '';
+            document.getElementById('edit-client-email').value = client.email || '';
+            document.getElementById('edit-client-phone').value = client.phone || '';
+            document.getElementById('edit-client-birthdate').value = client.birthDate || '';
+            window.GabyForms.setHaircut('edit-client-haircut', 'edit-client-haircut-other-wrap', 'edit-client-haircut-other', client.haircut || '');
+            document.getElementById('edit-client-beard').value = client.beard || '';
+            document.getElementById('edit-client-barber').value = client.preferredBarber || 'gabriel';
+            document.getElementById('client-marketing-toggle').checked = Boolean(client.marketingConsent?.optIn);
+
+// Mis citas, reseñas, notificaciones, favoritos y lista de espera (client-account.js).
+            if (!window.GabyAccountView) window.GabyAccountView = window.GabyAccount.mount(document.getElementById('client-history'));
+            else window.GabyAccountView.render();
+        }
+
+        window.GabyForms.initHaircut('client-haircut', 'client-haircut-other-wrap', 'client-haircut-other');
+        // Requisitos de contrasena en tiempo real, medidor de seguridad, ojo y generador.
+        const registerPasswordPolicy = window.GabyPassword.attach({
+            input: document.getElementById('client-password'),
+            confirm: document.getElementById('client-password-confirm'),
+            getContext: () => ({ name: document.getElementById('client-full-name').value, email: document.getElementById('client-email').value })
+        });
+        window.GabyPassword.addToggle(document.getElementById('login-password'));
+
+        function openChangePassword() {
+            const client = getCurrentClient();
+            if (!client) return;
+            window.GabySecurity.promptPasswordChange({
+                type: 'client',
+                email: client.email,
+                name: client.name,
+                title: 'Cambiar contraseña',
+                message: 'Escribe tu contraseña actual y crea una nueva.',
+                requireCurrent: true,
+                allowCancel: true
+            });
+        }
+        // Si se abre con #seguridad (desde Configuración > Seguridad), abre directamente el cambio.
+        if (window.location.hash === '#seguridad' && getCurrentClient()) window.setTimeout(openChangePassword, 300);
+        window.GabyForms.initHaircut('edit-client-haircut', 'edit-client-haircut-other-wrap', 'edit-client-haircut-other', { optional: true });
+        renderClientPortal();
+        window.GabyPreferences.initPreferences({});
+        window.addEventListener('storage', event => {
+            if (event.key === window.GabyData.STORAGE_KEY) {
+                renderClientPortal();
+            }
+        });
+        window.addEventListener('gabydatachange', event => {
+            if (event.detail?.key === window.GabyData.STORAGE_KEY) {
+                renderClientPortal();
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
